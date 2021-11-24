@@ -15,7 +15,7 @@ class <%--CLASSNAME--%> extends Query
 
     public function type(): Type
     {
-        return GraphQL::type("<%--TYPENAME--%>!");
+        return GraphQL::type("<%--TYPENAME--%>");
     }
 
     public function args(): array
