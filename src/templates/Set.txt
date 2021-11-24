@@ -15,7 +15,7 @@ class <%--CLASS_NAME--%> extends \Statamic\GraphQL\Queries\Query
 
     public function type(): Type
     {
-        return GraphQL::type("<%--TYPE_NAME--%>");
+        return GraphQL::type("<%--TYPE_NAME--%>!");
     }
 
     public function args(): array
