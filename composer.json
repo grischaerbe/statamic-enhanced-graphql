@@ -1,0 +1,19 @@
+{
+    "name": "legrisch/statamic-enhanced-graphql",
+    "autoload": {
+        "psr-4": {
+            "Legrisch\\StatamicEnhancedGraphql\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Statamic Enhanced Graphql",
+            "description": "Statamic Enhanced Graphql addon"
+        },
+        "laravel": {
+            "providers": [
+                "Legrisch\\StatamicEnhancedGraphql\\ServiceProvider"
+            ]
+        }
+    }
+}
