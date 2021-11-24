@@ -34,11 +34,6 @@ class ServiceProvider extends AddonServiceProvider
         Updater::class,
     ];
 
-    private function registerTypes(): void
-    {
-        TypeRegistrar::register();
-    }
-
     private function registerQueries(): void
     {
         foreach (glob(__DIR__ . "/Queries/*.php") as $filename)
@@ -54,7 +49,6 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        $this->registerTypes();
         $this->registerQueries();
 
         Statamic::afterInstalled(function () {
