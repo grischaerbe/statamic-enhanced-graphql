@@ -13,7 +13,7 @@ use Illuminate\Pagination\Paginator;
 use Rebing\GraphQL\Support\Facades\GraphQL as FacadesGraphQL;
 use Statamic\Support\Str;
 
-class EnhancedGraphQlServiceProvider extends AddonServiceProvider
+class ServiceProvider extends AddonServiceProvider
 {
     private static function buildQueryName(\Statamic\Contracts\Entries\Collection $collection, \Statamic\Fields\Blueprint $blueprint, bool $isCollection, bool $hasMultipleBlueprints) {
         if ($hasMultipleBlueprints) {
