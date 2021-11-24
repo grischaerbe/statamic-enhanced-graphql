@@ -33,7 +33,6 @@ class <%--CLASSNAME--%> extends Query
     public function args(): array
     {
         return [
-            'collection' => GraphQL::listOf(GraphQL::string()),
             'limit' => GraphQL::int(),
             'page' => GraphQL::int(),
             'filter' => GraphQL::type(JsonArgument::NAME),

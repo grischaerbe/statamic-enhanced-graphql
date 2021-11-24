@@ -4,7 +4,6 @@ namespace Legrisch\StatamicEnhancedGraphql;
 
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Facades\GraphQL;
-use Facades\Statamic\GraphQL\TypeRegistrar;
 use Illuminate\Support\Facades\Log;
 use Statamic\Events\BlueprintDeleted;
 use Statamic\Events\BlueprintSaved;
