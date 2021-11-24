@@ -1,4 +1,4 @@
-# Statamic Enhanced Gql
+# Statamic Enhanced GraphQL
 
 This addon provides an alternative GraphQL Interface to collections and entries. It's a POC though.
 DO NOT USE IN PRODUCTION.
