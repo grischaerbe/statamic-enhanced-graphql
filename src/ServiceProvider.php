@@ -51,7 +51,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->registerQueries();
 
         Statamic::afterInstalled(function () {
-            ClassBuilder::buildClasses();
+            Manager::buildClasses();
         });
     }
 }

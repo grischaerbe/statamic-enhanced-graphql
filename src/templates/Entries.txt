@@ -13,12 +13,12 @@ use Statamic\Tags\Concerns\QueriesConditions;
 use Statamic\GraphQL\Queries\Query;
 use Rebing\GraphQL\Support\Facades\GraphQL as RebingGraphQL;
 
-class <%--CLASSNAME--%> extends Query
+class <%--CLASS_NAME--%> extends Query
 {
     use QueriesConditions;
 
     protected $attributes = [
-        'name' => '<%--QUERYNAME--%>',
+        'name' => '<%--QUERY_NAME--%>',
     ];
 
     protected $middleware = [
@@ -27,7 +27,7 @@ class <%--CLASSNAME--%> extends Query
 
     public function type(): Type
     {
-        return RebingGraphQL::paginate(GraphQL::type("<%--TYPENAME--%>!"), "<%--TYPENAME--%>Pagination");
+        return RebingGraphQL::paginate(GraphQL::type("<%--TYPE_NAME--%>!"), "<%--TYPE_NAME--%>Pagination");
     }
 
     public function args(): array

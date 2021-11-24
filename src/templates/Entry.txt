@@ -7,15 +7,15 @@ use Statamic\Facades;
 use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
 
-class <%--CLASSNAME--%> extends Query
+class <%--CLASS_NAME--%> extends Query
 {
     protected $attributes = [
-        'name' => '<%--QUERYNAME--%>',
+        'name' => '<%--QUERY_NAME--%>',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type("<%--TYPENAME--%>");
+        return GraphQL::type("<%--TYPE_NAME--%>");
     }
 
     public function args(): array
