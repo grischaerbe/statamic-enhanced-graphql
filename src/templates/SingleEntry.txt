@@ -1,0 +1,25 @@
+<?php
+
+namespace Legrisch\StatamicEnhancedGraphql\Queries;
+
+use GraphQL\Type\Definition\Type;
+use Statamic\Facades\GraphQL;
+use Statamic\GraphQL\Queries\Query;
+use Statamic\Facades\Entry;
+
+class <%--CLASS_NAME--%> extends Query
+{
+    protected $attributes = [
+        'name' => '<%--QUERY_NAME--%>',
+    ];
+
+    public function type(): Type
+    {
+        return GraphQL::type("<%--TYPE_NAME--%>!");
+    }
+
+    public function resolve($root, $args)
+    {
+        return Entry::find('<%--ENTRY_ID--%>');
+    }
+}

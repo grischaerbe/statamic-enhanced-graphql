@@ -5,6 +5,7 @@ namespace Legrisch\StatamicEnhancedGraphql;
 use Legrisch\StatamicEnhancedGraphql\Builders\EntriesBuilder;
 use Legrisch\StatamicEnhancedGraphql\Builders\EntryBuilder;
 use Legrisch\StatamicEnhancedGraphql\Builders\SetBuilder;
+use Legrisch\StatamicEnhancedGraphql\Builders\SingleEntryBuilder;
 
 class Manager
 {
@@ -25,5 +26,6 @@ class Manager
     EntriesBuilder::build();
     EntryBuilder::build();
     SetBuilder::build();
+    SingleEntryBuilder::build();
   }
 }

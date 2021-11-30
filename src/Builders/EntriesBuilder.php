@@ -2,6 +2,7 @@
 
 namespace Legrisch\StatamicEnhancedGraphql\Builders;
 
+use Legrisch\StatamicEnhancedGraphql\Settings\ParsedSettings;
 use Statamic\Contracts\Entries\Collection as CollectionType;
 use Statamic\Fields\Blueprint;
 use Statamic\Facades\Collection;
@@ -33,8 +34,12 @@ class EntriesBuilder {
   }
 
   public static function build() {
-    $collections = Collection::all();
-    $collections->each(function ($collection) {
+
+    $enabledCollectionHandles = ParsedSettings::getEnabledCollections();
+
+    foreach ($enabledCollectionHandles as $handle) {
+      $collection = Collection::findByHandle($handle);
+
       $blueprints = $collection->entryBlueprints();
       if ($blueprints->count() === 1) {
           $blueprint = $blueprints->first();
@@ -46,6 +51,6 @@ class EntriesBuilder {
           $outputSingleQuery = static::parseTemplate($inputSingleQuery, $className, $queryName, $typeName, $collection->handle());
           file_put_contents(__DIR__ . "/../Queries/$className.php", $outputSingleQuery);
       }
-    });
+    }
   }
 }
