@@ -75,11 +75,9 @@ class ServiceProvider extends AddonServiceProvider
             ->route('legrisch.statamic-enhanced-graphql.index')
             ->icon('cache');
         });
-
-        $this->app->booted(function () {
+        
         Permission::register('manage graphql queries')
             ->label('Manage GraphQL Queries');
-        });
     
         $this->registerQueries();
 
