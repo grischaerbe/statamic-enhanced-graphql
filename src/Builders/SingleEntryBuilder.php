@@ -3,9 +3,6 @@
 namespace Legrisch\StatamicEnhancedGraphql\Builders;
 
 use Legrisch\StatamicEnhancedGraphql\Settings\ParsedSettings;
-use Statamic\Contracts\Entries\Collection as CollectionType;
-use Statamic\Fields\Blueprint;
-use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\GraphQL\Types\EntryType;
 use Statamic\Support\Str;
@@ -40,6 +37,9 @@ class SingleEntryBuilder {
       }
       $entryId = $singleEntryQuery['entry'][0];
       $entry = Entry::find($entryId);
+      if (!$entry) {
+        continue;
+      }
       $blueprint = $entry->blueprint();
       $collection = $entry->collection();
 

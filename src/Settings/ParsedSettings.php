@@ -2,6 +2,9 @@
 
 namespace Legrisch\StatamicEnhancedGraphql\Settings;
 
+use Statamic\Entries\Collection as EntriesCollection;
+use Statamic\Facades\Collection;
+
 class ParsedSettings {
 
   public static $settings;
@@ -14,8 +17,16 @@ class ParsedSettings {
     return self::$settings;
   }
 
-  public static function getEnabledCollections() {
-    return self::getSettings()['collections'] ?? [];
+  /**
+   * @return EntriesCollection[]
+   */
+  public static function getCollections(): array {
+    $handles = self::getSettings()['collections'] ?? [];
+    return collect($handles)->map(function($handle) {
+      return Collection::findByHandle($handle);
+    })->filter(function ($collection) {
+      return $collection->entryBlueprints()->count() === 1;
+    })->all();
   }
 
   public static function getSingleEntryQueries() {
