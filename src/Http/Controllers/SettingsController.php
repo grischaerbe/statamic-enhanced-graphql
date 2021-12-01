@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Legrisch\StatamicEnhancedGraphql\Manager;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
+use Statamic\Facades\GlobalSet;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -65,6 +66,13 @@ class SettingsController extends CpController
 
   protected function formBlueprint()
   {
+
+    $globalSets = GlobalSet::all();
+    $globalSetsOptions = array();
+    $globalSets->each(function ($globalSet) use (&$globalSetsOptions) {
+      $globalSetsOptions[$globalSet->handle()] = $globalSet->title();
+    });
+
     return Blueprint::makeFromSections([
       'collections' => [
         'handle' => 'collections',
@@ -79,6 +87,31 @@ class SettingsController extends CpController
             'type' => 'collections',
             'icon' => 'collections',
             'label' => 'Collections',
+            'instructions_position' => 'above',
+          ],
+        ]
+      ],
+      'global_sets' => [
+        'handle' => 'global_sets',
+        'display' => 'Global Sets',
+        'fields' => [
+          'global_sets_section' => [
+            'type' => 'section',
+            'display' => 'Global Sets',
+            'instructions' => 'Transform Global Sets to GraphQL queries.',
+          ],
+          'global_sets' => [
+            'display' => 'Global Sets',
+            'options' => $globalSetsOptions,
+            'multiple' => true,
+            'clearable' => true,
+            'searchable' => true,
+            'taggable' => false,
+            'push_tags' => false,
+            'cast_booleans' => false,
+            'type' => 'select',
+            'icon' => 'select',
+            'listable' => 'hidden',
             'instructions_position' => 'above',
           ],
         ]

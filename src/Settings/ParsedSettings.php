@@ -21,4 +21,8 @@ class ParsedSettings {
   public static function getSingleEntryQueries() {
     return self::getSettings()['single_entry_queries'] ?? [];
   }
+
+  public static function getGlobalSetQueries() {
+    return self::getSettings()['global_sets'] ?? [];
+  }
 }

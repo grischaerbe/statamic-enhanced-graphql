@@ -2,6 +2,7 @@
 
 namespace Legrisch\StatamicEnhancedGraphql\Builders;
 
+use Legrisch\StatamicEnhancedGraphql\Settings\ParsedSettings;
 use Statamic\Facades\GlobalSet;
 use Statamic\GraphQL\Types\GlobalSetType;
 use Statamic\Support\Str;
@@ -32,15 +33,20 @@ class SetBuilder {
   }
 
   public static function build() {
-    $sets = GlobalSet::all();
-    $sets->each(function ($set) {
-      $handle = $set->handle();
+
+    $globalSetsHandles = ParsedSettings::getGlobalSetQueries();
+
+    foreach ($globalSetsHandles as $globalSetHandle) {
+      $set = GlobalSet::findByHandle($globalSetHandle);
+      if (!$set) {
+        continue;
+      }
       $typeName = GlobalSetType::buildName($set);
       $input = file_get_contents(__DIR__ . "/../templates/Set.txt");
-      $className = static::buildClassName($handle);
-      $queryName = static::buildQueryName($handle);
-      $output = static::parseTemplate($input, $className, $queryName, $typeName, $handle);
+      $className = static::buildClassName($globalSetHandle);
+      $queryName = static::buildQueryName($globalSetHandle);
+      $output = static::parseTemplate($input, $className, $queryName, $typeName, $globalSetHandle);
       file_put_contents(__DIR__ . "/../Queries/$className.php", $output);
-    });
+    }
   }
 }

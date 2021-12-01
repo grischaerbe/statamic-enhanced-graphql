@@ -9,6 +9,7 @@ use Statamic\Events\BlueprintDeleted;
 use Statamic\Events\BlueprintSaved;
 use Statamic\Events\CollectionDeleted;
 use Statamic\Events\CollectionSaved;
+use Statamic\Events\GlobalSetDeleted;
 use Statamic\Statamic;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
@@ -40,6 +41,9 @@ class ServiceProvider extends AddonServiceProvider
             EventListener::class,
         ],
         CollectionSaved::class => [
+            EventListener::class,
+        ],
+        GlobalSetDeleted::class => [
             EventListener::class,
         ],
     ];
