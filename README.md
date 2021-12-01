@@ -1,6 +1,6 @@
 # Statamic Enhanced GraphQL
 
-This addon provides an alternative GraphQL Interface to collections, entries and global sets. 
+A Statamic CMS GraphQL Addon that provides alternative GraphQL queries for collections, entries and global sets. 
 
 > ⚠️ This is a POC and while I consider it somewhat stable, it's not thoroughly tested. Use at your own risk.
 
