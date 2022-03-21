@@ -7,91 +7,64 @@ use Statamic\Facades\Entry;
 use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Middleware\ResolvePage;
 use Statamic\GraphQL\Types\JsonArgument;
-use Statamic\Support\Arr;
 use Statamic\Support\Str;
-use Statamic\Tags\Concerns\QueriesConditions;
 use Statamic\GraphQL\Queries\Query;
-use Rebing\GraphQL\Support\Facades\GraphQL as RebingGraphQL;
+use Statamic\GraphQL\Queries\Concerns\FiltersQuery;
 
-class <%--CLASS_NAME--%> extends Query
+class CLASS_NAME extends Query
 {
-    use QueriesConditions;
+  use FiltersQuery;
 
-    protected $attributes = [
-        'name' => '<%--QUERY_NAME--%>',
+  protected $attributes = [
+    'name' => 'QUERY_NAME',
+  ];
+
+  protected $middleware = [
+    ResolvePage::class,
+  ];
+
+  public function type(): Type
+  {
+    return GraphQL::nonNull(GraphQL::paginate(GraphQL::type("TYPE_NAME!")));
+  }
+
+  public function args(): array
+  {
+    return [
+      'limit' => GraphQL::int(),
+      'page' => GraphQL::int(),
+      'filter' => GraphQL::type(JsonArgument::NAME),
+      'sort' => GraphQL::listOf(GraphQL::string()),
     ];
+  }
 
-    protected $middleware = [
-        ResolvePage::class,
-    ];
+  public function resolve($root, $args)
+  {
+    $query = Entry::query();
 
-    public function type(): Type
-    {
-        return GraphQL::nonNull(RebingGraphQL::paginate(GraphQL::type("<%--TYPE_NAME--%>!"), "<%--TYPE_NAME--%>Pagination"));
+    $query->where('collection', "COLLECTION_HANDLE");
+
+    $this->filterQuery($query, $args['filter'] ?? []);
+
+    $this->sortQuery($query, $args['sort'] ?? []);
+
+    return $query->paginate($args['limit'] ?? 1000);
+  }
+
+  private function sortQuery($query, $sorts)
+  {
+    if (empty($sorts)) {
+      $sorts = ['id'];
     }
 
-    public function args(): array
-    {
-        return [
-            'limit' => GraphQL::int(),
-            'page' => GraphQL::int(),
-            'filter' => GraphQL::type(JsonArgument::NAME),
-            'sort' => GraphQL::listOf(GraphQL::string()),
-        ];
+    foreach ($sorts as $sort) {
+      $order = 'asc';
+
+      if (Str::contains($sort, ' ')) {
+        [$sort, $order] = explode(' ', $sort);
+      }
+
+      $query->orderBy($sort, $order);
     }
-
-    public function resolve($root, $args)
-    {
-        $query = Entry::query();
-
-        $query->where('collection', "<%--COLLECTION_HANDLE--%>");
-
-        $this->filterQuery($query, $args['filter'] ?? []);
-
-        $this->sortQuery($query, $args['sort'] ?? []);
-
-        return $query->paginate($args['limit'] ?? 1000);
-    }
-
-    private function filterQuery($query, $filters)
-    {
-        if (! isset($filters['status']) && ! isset($filters['published'])) {
-            $filters['status'] = 'published';
-        }
-
-        foreach ($filters as $field => $definitions) {
-            if (! is_array($definitions)) {
-                $definitions = [['equals' => $definitions]];
-            }
-
-            if (Arr::assoc($definitions)) {
-                $definitions = collect($definitions)->map(function ($value, $key) {
-                    return [$key => $value];
-                })->values()->all();
-            }
-
-            foreach ($definitions as $definition) {
-                $condition = array_keys($definition)[0];
-                $value = array_values($definition)[0];
-                $this->queryCondition($query, $field, $condition, $value);
-            }
-        }
-    }
-
-    private function sortQuery($query, $sorts)
-    {
-        if (empty($sorts)) {
-            $sorts = ['id'];
-        }
-
-        foreach ($sorts as $sort) {
-            $order = 'asc';
-
-            if (Str::contains($sort, ' ')) {
-                [$sort, $order] = explode(' ', $sort);
-            }
-
-            $query->orderBy($sort, $order);
-        }
-    }
+  }
 }

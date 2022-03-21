@@ -2,8 +2,8 @@
 
 namespace Legrisch\StatamicEnhancedGraphql\Settings;
 
-use Statamic\Yaml\ParseException;
 use Illuminate\Support\Facades\Cache;
+use Statamic\Yaml\ParseException;
 
 class Settings
 {
@@ -13,7 +13,7 @@ class Settings
    * Read is done from the cache, if the appropriate key exists and $fromCache
    * is set to true (default).
    *
-   * @param   bool fromCache
+   * @param bool fromCache
    * @return  array
    * @throws  ParseException
    */

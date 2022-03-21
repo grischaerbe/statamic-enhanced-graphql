@@ -3,7 +3,7 @@
 namespace Legrisch\StatamicEnhancedGraphql;
 
 use Statamic\UpdateScripts\UpdateScript;
- 
+
 class Updater extends UpdateScript
 {
   public function shouldUpdate($newVersion, $oldVersion)

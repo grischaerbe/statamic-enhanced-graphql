@@ -7,19 +7,19 @@ use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
 use Statamic\Facades\Entry;
 
-class <%--CLASS_NAME--%> extends Query
+class CLASS_NAME extends Query
 {
     protected $attributes = [
-        'name' => '<%--QUERY_NAME--%>',
+        'name' => 'QUERY_NAME',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type("<%--TYPE_NAME--%>!");
+        return GraphQL::type("TYPE_NAME!");
     }
 
     public function resolve($root, $args)
     {
-        return Entry::find('<%--ENTRY_ID--%>');
+        return Entry::find('ENTRY_ID');
     }
 }

@@ -4,8 +4,8 @@ namespace Legrisch\StatamicEnhancedGraphql;
 
 class EventListener
 {
-    public function handle($event)
-    {
-        Manager::buildClasses();
-    }
+  public function handle($event)
+  {
+    Manager::buildClasses();
+  }
 }

@@ -2,12 +2,13 @@
 
 namespace Legrisch\StatamicEnhancedGraphql\Http\Controllers;
 
-use Legrisch\StatamicEnhancedGraphql\Settings\Settings;
 use Illuminate\Http\Request;
 use Legrisch\StatamicEnhancedGraphql\Manager;
+use Legrisch\StatamicEnhancedGraphql\Settings\Settings;
 use Statamic\Facades\Blueprint;
-use Statamic\Facades\Config;
+use Statamic\Facades\Collection;
 use Statamic\Facades\GlobalSet;
+use Statamic\Facades\Taxonomy;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -36,8 +37,8 @@ class SettingsController extends CpController
 
     return view('statamic-enhanced-graphql::settings', [
       'blueprint' => $blueprint->toPublishArray(),
-      'values'    => $fields->values(),
-      'meta'      => $fields->meta(),
+      'values' => $fields->values(),
+      'meta' => $fields->meta(),
     ]);
   }
 
@@ -73,6 +74,18 @@ class SettingsController extends CpController
       $globalSetsOptions[$globalSet->handle()] = $globalSet->title();
     });
 
+    $taxonomies = Taxonomy::all();
+    $taxonomiesOptions = array();
+    $taxonomies->each(function ($taxonomy) use (&$taxonomiesOptions) {
+      $taxonomiesOptions[$taxonomy->handle()] = $taxonomy->title();
+    });
+
+    $collections = Collection::all();
+    $collectionsOptions = array();
+    $collections->each(function ($collection) use (&$collectionsOptions) {
+      $collectionsOptions[$collection->handle()] = $collection->title();
+    });
+
     return Blueprint::makeFromSections([
       'collections' => [
         'handle' => 'collections',
@@ -84,9 +97,16 @@ class SettingsController extends CpController
           ],
           'collections' => [
             'display' => 'Collections',
-            'type' => 'collections',
-            'icon' => 'collections',
-            'label' => 'Collections',
+            'options' => $collectionsOptions,
+            'multiple' => true,
+            'clearable' => true,
+            'searchable' => true,
+            'taggable' => false,
+            'push_tags' => false,
+            'cast_booleans' => false,
+            'type' => 'select',
+            'icon' => 'select',
+            'listable' => 'hidden',
             'instructions_position' => 'above',
           ],
         ]
@@ -103,6 +123,31 @@ class SettingsController extends CpController
           'global_sets' => [
             'display' => 'Global Sets',
             'options' => $globalSetsOptions,
+            'multiple' => true,
+            'clearable' => true,
+            'searchable' => true,
+            'taggable' => false,
+            'push_tags' => false,
+            'cast_booleans' => false,
+            'type' => 'select',
+            'icon' => 'select',
+            'listable' => 'hidden',
+            'instructions_position' => 'above',
+          ],
+        ]
+      ],
+      'taxonomies' => [
+        'handle' => 'taxonomies',
+        'display' => 'Taxonomies',
+        'fields' => [
+          'taxonomies_section' => [
+            'type' => 'section',
+            'display' => 'Taxonomies',
+            'instructions' => 'Transform Taxonomies to GraphQL queries.',
+          ],
+          'taxonomies' => [
+            'display' => 'Taxonomies',
+            'options' => $taxonomiesOptions,
             'multiple' => true,
             'clearable' => true,
             'searchable' => true,

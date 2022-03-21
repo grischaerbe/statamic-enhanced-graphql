@@ -6,16 +6,21 @@ use GraphQL\Type\Definition\Type;
 use Statamic\Facades;
 use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
+use Statamic\GraphQL\Queries\Concerns\FiltersQuery;
+use Statamic\GraphQL\Types\EntryInterface;
+use Statamic\GraphQL\Types\JsonArgument;
 
-class <%--CLASS_NAME--%> extends Query
+class CLASS_NAME extends Query
 {
+    use FiltersQuery;
+
     protected $attributes = [
-        'name' => '<%--QUERY_NAME--%>',
+        'name' => 'QUERY_NAME',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type("<%--TYPE_NAME--%>");
+        return GraphQL::type("TYPE_NAME");
     }
 
     public function args(): array
@@ -25,14 +30,15 @@ class <%--CLASS_NAME--%> extends Query
             'slug' => GraphQL::string(),
             'uri' => GraphQL::string(),
             'site' => GraphQL::string(),
+            'filter' => GraphQL::type(JsonArgument::NAME),
         ];
     }
 
     public function resolve($root, $args)
     {
         $query = Facades\Entry::query();
-        
-        $query->where('collection', "<%--COLLECTION_HANDLE--%>");
+
+        $query->where('collection', "COLLECTION_HANDLE");
 
         if ($id = $args['id'] ?? null) {
             $query->where('id', $id);
@@ -49,6 +55,8 @@ class <%--CLASS_NAME--%> extends Query
         if ($site = $args['site'] ?? null) {
             $query->where('site', $site);
         }
+
+        $this->filterQuery($query, $args['filter'] ?? []);
 
         return $query->limit(1)->get()->first();
     }

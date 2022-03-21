@@ -3,12 +3,13 @@
 namespace Legrisch\StatamicEnhancedGraphql\Builders;
 
 use Legrisch\StatamicEnhancedGraphql\Settings\ParsedSettings;
-use Statamic\Facades\Entry;
 use Statamic\GraphQL\Types\EntryType;
 use Statamic\Support\Str;
 
-class SingleEntryBuilder {
-  private static function buildClassName($queryName): string {
+class SingleEntryBuilder
+{
+  private static function buildClassName($queryName): string
+  {
     return Str::studly($queryName) . 'SingleEntryQuery';
   }
 
@@ -27,28 +28,29 @@ class SingleEntryBuilder {
     return $input;
   }
 
-  public static function build() {
+  public static function build()
+  {
 
     $singleEntryQueries = ParsedSettings::getSingleEntryQueries();
 
     foreach ($singleEntryQueries as $singleEntryQuery) {
-      if (!($singleEntryQuery['enabled'] ?? false)) {
-        continue;
-      }
-      $entryId = $singleEntryQuery['entry'][0];
-      $entry = Entry::find($entryId);
-      if (!$entry) {
-        continue;
-      }
+      /** @var \Statamic\Entries\Entry $entry */
+      $entry = $singleEntryQuery["entry"];
+
       $blueprint = $entry->blueprint();
       $collection = $entry->collection();
 
       $typeName = EntryType::buildName($collection, $blueprint);
       $queryName = $singleEntryQuery['query_name'];
       $className = static::buildClassName($queryName);
-      $inputSingleQuery = file_get_contents(__DIR__ . "/../templates/SingleEntry.txt");
-      $outputSingleQuery = static::parseTemplate($inputSingleQuery, $className, $queryName, $typeName, $entryId);
-      file_put_contents(__DIR__ . "/../Queries/$className.php", $outputSingleQuery);
+      $input = file_get_contents(__DIR__ . "/../templates/SingleEntry.txt");
+      $output = Replacer::replace($input, [
+        "className" => $className,
+        "queryName" => $queryName,
+        "typeName" => $typeName,
+        "entryId" => $entry->id(),
+      ]);
+      file_put_contents(__DIR__ . "/../Queries/$className.php", $output);
     }
   }
 }

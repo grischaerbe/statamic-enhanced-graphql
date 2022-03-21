@@ -8,43 +8,35 @@ use Statamic\Fields\Blueprint;
 use Statamic\GraphQL\Types\EntryType;
 use Statamic\Support\Str;
 
-class EntriesBuilder {
-  private static function buildQueryName(Collection $collection, Blueprint $blueprint): string {
+class EntriesBuilder
+{
+  private static function buildQueryName(Collection $collection, Blueprint $blueprint): string
+  {
     return $collection->handle() . 'Entries';
   }
 
-  private static function buildClassName(Collection $collection, Blueprint $blueprint): string {
-    return Str::studly($collection->handle()) . 'EntriesQuery';
-  }
-
-  private static function parseTemplate(
-    string $input,
-    string $className,
-    string $queryName,
-    string $typeName,
-    string $collectionHandle
-  ): string
+  private static function buildClassName(Collection $collection, Blueprint $blueprint): string
   {
-    $input = str_replace('<%--CLASS_NAME--%>', $className, $input);
-    $input = str_replace('<%--QUERY_NAME--%>', $queryName, $input);
-    $input = str_replace('<%--TYPE_NAME--%>', $typeName, $input);
-    $input = str_replace('<%--COLLECTION_HANDLE--%>', $collectionHandle, $input);
-    return $input;
+    return Str::studly($collection->handle()) . 'EntriesQuery';
   }
 
   public static function build()
   {
     $collections = ParsedSettings::getCollections();
 
-    foreach ($collections as $collection)
-    {
-        $blueprint = $collection->entryBlueprints()->first();
-        $typeName = EntryType::buildName($collection, $blueprint);
-        $className = static::buildClassName($collection, $blueprint);
-        $queryName = static::buildQueryName($collection, $blueprint);
-        $inputSingleQuery = file_get_contents(__DIR__ . "/../templates/Entries.txt");
-        $outputSingleQuery = static::parseTemplate($inputSingleQuery, $className, $queryName, $typeName, $collection->handle());
-        file_put_contents(__DIR__ . "/../Queries/$className.php", $outputSingleQuery);
+    foreach ($collections as $collection) {
+      $blueprint = $collection->entryBlueprints()->first();
+      $typeName = EntryType::buildName($collection, $blueprint);
+      $className = static::buildClassName($collection, $blueprint);
+      $queryName = static::buildQueryName($collection, $blueprint);
+      $input = file_get_contents(__DIR__ . "/../templates/Entries.txt");
+      $output = Replacer::replace($input, [
+        "className" => $className,
+        "queryName" => $queryName,
+        "typeName" => $typeName,
+        "collectionHandle" => $collection->handle()
+      ]);
+      file_put_contents(__DIR__ . "/../Queries/$className.php", $output);
     }
   }
 }

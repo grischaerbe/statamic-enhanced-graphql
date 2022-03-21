@@ -1,32 +1,32 @@
 {
-    "name": "legrisch/statamic-enhanced-graphql",
-    "description": "A Statamic CMS GraphQL Addon that provides alternative GraphQL queries for collections, entries and global sets.",
-    "type": "statamic-addon",
-    "require": {
-        "php": "^8.0",
-        "statamic/cms": "^3.1"
-      },
-    "license": "MIT",
-    "authors": [
-        {
-          "name": "Grischa Erbe",
-          "email": "grischa.erbe@googlemail.com"
-        }
-      ],
-    "autoload": {
-        "psr-4": {
-            "Legrisch\\StatamicEnhancedGraphql\\": "src"
-        }
-    },
-    "extra": {
-        "statamic": {
-            "name": "Statamic Enhanced GraphQL",
-            "description": "A Statamic CMS GraphQL Addon that provides alternative GraphQL queries for collections, entries and global sets."
-        },
-        "laravel": {
-            "providers": [
-                "Legrisch\\StatamicEnhancedGraphql\\ServiceProvider"
-            ]
-        }
+  "name": "legrisch/statamic-enhanced-graphql",
+  "description": "A Statamic CMS GraphQL Addon that provides alternative GraphQL queries for collections, entries and global sets.",
+  "type": "statamic-addon",
+  "require": {
+    "php": "^8.0",
+    "statamic/cms": "^3.3"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Grischa Erbe",
+      "email": "grischa.erbe@googlemail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Legrisch\\StatamicEnhancedGraphql\\": "src"
+    }
+  },
+  "extra": {
+    "statamic": {
+      "name": "Statamic Enhanced GraphQL",
+      "description": "A Statamic CMS GraphQL Addon that provides alternative GraphQL queries for collections, entries and global sets."
+    },
+    "laravel": {
+      "providers": [
+        "Legrisch\\StatamicEnhancedGraphql\\ServiceProvider"
+      ]
+    }
+  }
 }

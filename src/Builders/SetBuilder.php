@@ -3,49 +3,40 @@
 namespace Legrisch\StatamicEnhancedGraphql\Builders;
 
 use Legrisch\StatamicEnhancedGraphql\Settings\ParsedSettings;
-use Statamic\Facades\GlobalSet;
+use Statamic\Globals\GlobalSet;
 use Statamic\GraphQL\Types\GlobalSetType;
 use Statamic\Support\Str;
 
-class SetBuilder {
+class SetBuilder
+{
 
-  private static function buildQueryName(string $setHandle): string {
-    return $setHandle . 'GlobalSet';
-  }
-
-  private static function buildClassName(string $setHandle): string {
-    return Str::studly($setHandle) . 'GlobalSet';
-  }
-
-  private static function parseTemplate(
-    string $input,
-    string $className,
-    string $queryName,
-    string $typeName,
-    string $setHandle
-  ): string
+  private static function buildQueryName(GlobalSet $globalSet): string
   {
-    $input = str_replace('<%--CLASS_NAME--%>', $className, $input);
-    $input = str_replace('<%--QUERY_NAME--%>', $queryName, $input);
-    $input = str_replace('<%--TYPE_NAME--%>', $typeName, $input);
-    $input = str_replace('<%--SET_HANDLE--%>', $setHandle, $input);
-    return $input;
+    return $globalSet->handle() . 'GlobalSet';
   }
 
-  public static function build() {
+  private static function buildClassName(GlobalSet $globalSet): string
+  {
+    return Str::studly($globalSet->handle()) . 'GlobalSet';
+  }
 
-    $globalSetsHandles = ParsedSettings::getGlobalSetQueries();
+  public static function build()
+  {
 
-    foreach ($globalSetsHandles as $globalSetHandle) {
-      $set = GlobalSet::findByHandle($globalSetHandle);
-      if (!$set) {
-        continue;
-      }
-      $typeName = GlobalSetType::buildName($set);
+    $globalSets = ParsedSettings::getGlobalSets();
+
+    /** @var GlobalSet $globalSet */
+    foreach ($globalSets as $globalSet) {
+      $typeName = GlobalSetType::buildName($globalSet);
+      $className = static::buildClassName($globalSet);
+      $queryName = static::buildQueryName($globalSet);
       $input = file_get_contents(__DIR__ . "/../templates/Set.txt");
-      $className = static::buildClassName($globalSetHandle);
-      $queryName = static::buildQueryName($globalSetHandle);
-      $output = static::parseTemplate($input, $className, $queryName, $typeName, $globalSetHandle);
+      $output = Replacer::replace($input, [
+        "className" => $className,
+        "queryName" => $queryName,
+        "typeName" => $typeName,
+        "setHandle" => $globalSet->handle()
+      ]);
       file_put_contents(__DIR__ . "/../Queries/$className.php", $output);
     }
   }

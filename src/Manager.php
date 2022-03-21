@@ -6,14 +6,16 @@ use Legrisch\StatamicEnhancedGraphql\Builders\EntriesBuilder;
 use Legrisch\StatamicEnhancedGraphql\Builders\EntryBuilder;
 use Legrisch\StatamicEnhancedGraphql\Builders\SetBuilder;
 use Legrisch\StatamicEnhancedGraphql\Builders\SingleEntryBuilder;
+use Legrisch\StatamicEnhancedGraphql\Builders\TermBuilder;
+use Legrisch\StatamicEnhancedGraphql\Builders\TermsBuilder;
 
 class Manager
 {
-  private static function clearDirectory() {
+  private static function clearDirectory()
+  {
     $files = glob(__DIR__ . '/Queries/*');
-    foreach($files as $file)
-    {
-      if(is_file($file)) {
+    foreach ($files as $file) {
+      if (is_file($file)) {
         unlink($file);
       }
     }
@@ -22,10 +24,12 @@ class Manager
   public static function buildClasses(): void
   {
     static::clearDirectory();
-      
+
     EntriesBuilder::build();
     EntryBuilder::build();
     SetBuilder::build();
     SingleEntryBuilder::build();
+    TermsBuilder::build();
+    TermBuilder::build();
   }
 }

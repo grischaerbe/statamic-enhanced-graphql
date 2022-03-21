@@ -6,29 +6,29 @@ use GraphQL\Type\Definition\Type;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Site;
+use Statamic\GraphQL\Queries\Query;
 
-class <%--CLASS_NAME--%> extends \Statamic\GraphQL\Queries\Query
+class CLASS_NAME extends Query
 {
-    protected $attributes = [
-        'name' => '<%--QUERY_NAME--%>',
+  protected $attributes = [
+    'name' => 'QUERY_NAME',
+  ];
+
+  public function type(): Type
+  {
+    return GraphQL::type("TYPE_NAME!");
+  }
+
+  public function args(): array
+  {
+    return [
+      'site' => GraphQL::string(),
     ];
+  }
 
-    public function type(): Type
-    {
-        return GraphQL::type("<%--TYPE_NAME--%>!");
-    }
-
-    public function args(): array
-    {
-        return [
-            'site' => GraphQL::string(),
-        ];
-    }
-
-    public function resolve($root, $args)
-    {
-        $site = $args['site'] ?? Site::default()->handle();
-
-        return GlobalSet::find("<%--SET_HANDLE--%>")->in($site);
-    }
+  public function resolve($root, $args)
+  {
+    $site = $args['site'] ?? Site::default()->handle();
+    return GlobalSet::find('SET_HANDLE')->in($site);
+  }
 }

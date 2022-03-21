@@ -1,0 +1,55 @@
+<?php
+
+namespace Legrisch\StatamicEnhancedGraphql\Queries;
+
+use GraphQL\Type\Definition\Type;
+use Statamic\Facades;
+use Statamic\Facades\GraphQL;
+use Statamic\GraphQL\Queries\Query;
+
+class CLASS_NAME extends Query
+{
+  protected $attributes = [
+    'name' => 'QUERY_NAME',
+  ];
+
+  public function type(): Type
+  {
+    return GraphQL::type("TYPE_NAME");
+  }
+
+  public function args(): array
+  {
+    return [
+      'id' => GraphQL::string(),
+      'slug' => GraphQL::string(),
+      'uri' => GraphQL::string(),
+      'site' => GraphQL::string(),
+    ];
+  }
+
+  public function resolve($root, $args)
+  {
+    $query = Facades\Term::query();
+
+    $query->where('taxonomy', "TAXONOMY_HANDLE");
+
+    if ($id = $args['id'] ?? null) {
+      $query->where('id', $id);
+    }
+
+    if ($slug = $args['slug'] ?? null) {
+      $query->where('slug', $slug);
+    }
+
+    if ($uri = $args['uri'] ?? null) {
+      $query->where('uri', $uri);
+    }
+
+    if ($site = $args['site'] ?? null) {
+      $query->where('site', $site);
+    }
+
+    return $query->limit(1)->get()->first();
+  }
+}
