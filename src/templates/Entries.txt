@@ -25,7 +25,7 @@ class CLASS_NAME extends Query
 
   public function type(): Type
   {
-    return GraphQL::nonNull(GraphQL::paginate(GraphQL::type("TYPE_NAME!")));
+    return GraphQL::nonNull(GraphQL::paginate(GraphQL::type("TYPE_NAME")));
   }
 
   public function args(): array
