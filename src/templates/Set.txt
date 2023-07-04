@@ -1,34 +1,51 @@
 <?php
 
-namespace Legrisch\StatamicEnhancedGraphql\Queries;
+namespace Statamic\GraphQL\Queries;
 
+use Facades\Statamic\API\ResourceAuthorizer;
 use GraphQL\Type\Definition\Type;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Site;
-use Statamic\GraphQL\Queries\Query;
+use Statamic\GraphQL\Middleware\AuthorizeSubResources;
+use Statamic\GraphQL\Types\GlobalSetInterface;
 
 class CLASS_NAME extends Query
 {
-  protected $attributes = [
-    'name' => 'QUERY_NAME',
-  ];
-
-  public function type(): Type
-  {
-    return GraphQL::type("TYPE_NAME!");
-  }
-
-  public function args(): array
-  {
-    return [
-      'site' => GraphQL::string(),
+    protected $attributes = [
+        'name' => 'QUERY_NAME',
     ];
-  }
 
-  public function resolve($root, $args)
-  {
-    $site = $args['site'] ?? Site::default()->handle();
-    return GlobalSet::find('SET_HANDLE')->in($site);
-  }
+    protected $middleware = [
+        AuthorizeSubResources::class,
+    ];
+
+    public function type(): Type
+    {
+        return GraphQL::type("TYPE_NAME!");
+    }
+
+    public function args(): array
+    {
+        return [
+            'site' => GraphQL::string(),
+        ];
+    }
+
+    public function resolve($root, $args)
+    {
+        $site = $args['site'] ?? Site::default()->handle();
+
+        return GlobalSet::find('SET_HANDLE')->in($site);
+    }
+
+    public function subResourceArg()
+    {
+        return 'handle';
+    }
+
+    public function allowedSubResources()
+    {
+        return ResourceAuthorizer::allowedSubResources('graphql', 'globals');
+    }
 }
